@@ -27,7 +27,7 @@ stages {
     sh 'sudo docker build -t deeptish29/myapp .'
      sh " sudo docker login -u=$env.dockername -p=$env.dockerpass"
      sh " sudo docker push deeptish29/myapp "
-     sh "sudo docker run -p 8081:9080 deeptish29/myapp "
+     sh "sudo docker run -p 8080:9080 deeptish29/myapp "
    
         }
    }   
