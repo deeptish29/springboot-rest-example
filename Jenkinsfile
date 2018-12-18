@@ -1,38 +1,39 @@
 pipeline {
+  
  agent any
 stages {
   stage('CodeCheckOut') {
     steps {
       script {
        checkout scm
-       /*def mvnHome = tool 'maven-3'
-       def javaHome = tool 'JAVA_1.8'*/
        }
       }
      }      
       stage('Build customer app code'){
         steps {
         script {
-         sh 'sudo apt-get update'
+
+         sh 'sudo apt-get -y update'
          sh 'sudo apt-get -y install default-jdk'
          sh 'sudo apt-get -y install maven'
-         sh 'mvn clean install -Dmaven.test.skip=true'
-         
-       /*sh 'sudo yum -y install unzip java-1.8.0-openjdk'
-       sh 'sudo yum -y install maven'
-       sh 'mvn clean install'*/
+       sh 'mvn clean install '
+          sh'mvn test site'
        }
       }
      }
-  stage('Docker Build'){
-        steps {
-        script {
-         sh 'sudo docker build -t deeptish29/appimage .'
-         sh "sudo docker login -u=$env.dockername -p=$env.dockerpass"
-         sh "sudo docker push deeptish29/appimage"
-         sh "sudo docker run -p 8080:9080 deeptish29/appimage"
+ stage('Docker Build and push'){
+  steps{
+   script{
+    sh 'sudo docker build -t deeptish29/myapp .'
+     sh " sudo docker login -u=$env.dockername -p=$env.dockerpass"
+     sh " sudo docker push deeptish29/myapp "
+     sh "sudo docker run -p 8081:9080 deeptish29/myapp "
+   
         }
-        }
+   }   
+   
   }
+
  }
+
 }
